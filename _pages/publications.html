@@ -5,32 +5,60 @@ permalink: /publications/
 author_profile: true
 ---
 
-{% if site.author.googlescholar %}
-  <div class="wordwrap">You can also find my articles on <a href="{{site.author.googlescholar}}">my Google Scholar profile</a>.</div>
-{% endif %}
-
 {% include base_path %}
 
-<!-- New style rendering if publication categories are defined -->
-{% if site.publication_category %}
-  {% for category in site.publication_category  %}
-    {% assign title_shown = false %}
-    {% for post in site.publications reversed %}
-      {% if post.category != category[0] %}
-        {% continue %}
-      {% endif %}
-      {% unless title_shown %}
-        <h2>{{ category[1].title }}</h2><hr />
-        {% assign title_shown = true %}
-      {% endunless %}
-      {% include archive-single.html %}
-    {% endfor %}
-  {% endfor %}
-{% else %}
-  {% for post in site.publications reversed %}
-    {% include archive-single.html %}
-  {% endfor %}
+{% if site.author.googlescholar %}
+  <div class="wordwrap">You can also find my articles on <a href="{{ site.author.googlescholar }}">my Google Scholar profile</a>.</div>
 {% endif %}
 
+{% assign pubs = site.publications | sort: "pub_order" %}
 
+<h2 id="preprints">Preprints</h2>
+<hr />
+{% for pub in pubs %}
+  {% if pub.category == "manuscripts" %}
+  <div class="list__item">
+    <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+      <h3 class="archive__item-title" itemprop="headline">
+        <a href="{{ pub.url | relative_url }}" rel="permalink">{{ pub.title }}</a>
+      </h3>
+      <p class="page__meta">
+        <em>{{ pub.venue }} {{ pub.date | date: "%Y" }}</em>{% if pub.first_author %} &middot; First author{% endif %}
+      </p>
+      <p class="archive__item-excerpt" itemprop="author">
+        {% for author in pub.authors %}{% if author == "Junteng Liu" %}<strong>Junteng Liu</strong>{% else %}{{ author }}{% endif %}{% unless forloop.last %}, {% endunless %}{% endfor %}
+      </p>
+      {% if pub.codeurl %}
+      <p class="archive__item-excerpt">
+        <a href="{{ pub.codeurl }}"><i class="fab fa-github" aria-hidden="true"></i> Code repository</a>
+      </p>
+      {% endif %}
+    </article>
+  </div>
+  {% endif %}
+{% endfor %}
 
+<h2 id="conference-papers">Conference Papers</h2>
+<hr />
+{% for pub in pubs %}
+  {% if pub.category == "conferences" %}
+  <div class="list__item">
+    <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+      <h3 class="archive__item-title" itemprop="headline">
+        <a href="{{ pub.url | relative_url }}" rel="permalink">{{ pub.title }}</a>
+      </h3>
+      <p class="page__meta">
+        <em>{{ pub.venue }} {{ pub.date | date: "%Y" }}</em>{% if pub.first_author %} &middot; First author{% endif %}
+      </p>
+      <p class="archive__item-excerpt" itemprop="author">
+        {% for author in pub.authors %}{% if author == "Junteng Liu" %}<strong>Junteng Liu</strong>{% else %}{{ author }}{% endif %}{% unless forloop.last %}, {% endunless %}{% endfor %}
+      </p>
+      {% if pub.codeurl %}
+      <p class="archive__item-excerpt">
+        <a href="{{ pub.codeurl }}"><i class="fab fa-github" aria-hidden="true"></i> Code repository</a>
+      </p>
+      {% endif %}
+    </article>
+  </div>
+  {% endif %}
+{% endfor %}
